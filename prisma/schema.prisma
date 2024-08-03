@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  email    String   @unique
+  password String
+  username String   @unique
+  avatar   String?
+  role     String?
+  level    String?
+  premium  Boolean?
+  details  Json?
+}
+
+model Facility {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  name     String @unique
+  address  String
+  cars     Json[]
+  bookings Json[]
+}
+
+model Car {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  vin          String   @unique
+  model        String
+  year         Int
+  color        String
+  price        String
+  available    Boolean?
+  service_date String
+  features     String[]
+  facility     String
+}
+
+model Booking {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  user_id         String
+  dates           String[]
+  vin             String
+  facility_pickup String
+  facility_drop   String
+  cost            String
+  finalized       Boolean
+  rating          Json[]
+  facility        String
+}
+
+model Rating {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  user_id       String
+  score         Int
+  description   String
+  vin           String
+  facility_name String
+  booking_id    String
+}
